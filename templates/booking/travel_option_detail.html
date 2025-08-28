@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ travel_option.source }} → {{ travel_option.destination }}</h1>
+
+<div class="card">
+    <h3>{{ travel_option.get_type_display }} {{ travel_option.travel_id }}</h3>
+    <p><strong>Date:</strong> {{ travel_option.departure_date }}</p>
+    <p><strong>Time:</strong> {{ travel_option.departure_time }}</p>
+    <p class="price">₹{{ travel_option.price }}</p>
+    <p>{{ travel_option.available_seats }} seats available</p>
+    
+    {% if user.is_authenticated %}
+    <a href="{% url 'book_travel' travel_option.travel_id %}" class="btn">Book</a>
+    {% else %}
+    <a href="{% url 'login' %}" class="btn">Login</a>
+    {% endif %}
+</div>
+
+{% if similar_options %}
+<h3>Similar Options</h3>
+<div class="grid">
+    {% for option in similar_options %}
+    <div class="card">
+        <h4>{{ option.get_type_display }}</h4>
+        <p>{{ option.date }} {{ option.time }}</p>
+        <p class="price">₹{{ option.price }}</p>
+        <a href="{% url 'travel_option_detail' option.travel_id %}" class="btn">View</a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<a href="{% url 'travel_options' %}">Back to Search</a>
+{% endblock %}

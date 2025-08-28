@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Search Travel</h1>
+
+<form method="get">
+    <input type="text" name="source" placeholder="From" value="{{ form.source.value|default:'' }}">
+    <input type="text" name="destination" placeholder="To" value="{{ form.destination.value|default:'' }}">
+    <select name="travel_type">
+        <option value="">All Types</option>
+        <option value="flight">Flight</option>
+        <option value="train">Train</option>
+        <option value="bus">Bus</option>
+    </select>
+    <input type="date" name="date" value="{{ form.date.value|default:'' }}">
+    <input type="number" name="min_price" placeholder="Min price" value="{{ form.min_price.value|default:'' }}">
+    <input type="number" name="max_price" placeholder="Max price" value="{{ form.max_price.value|default:'' }}">
+    <button type="submit" class="btn">Search</button>
+</form>
+
+{% if page_obj %}
+<p>{{ total_results }} results found</p>
+<div class="grid">
+    {% for option in page_obj %}
+    <div class="card">
+        <h4>{{ option.get_type_display }}</h4>
+        <p>{{ option.source }} → {{ option.destination }}</p>
+        <p>{{ option.date }} {{ option.time }}</p>
+        <p class="price">₹{{ option.price }}</p>
+        <p>{{ option.available_seats }} seats</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'book_travel' option.travel_id %}" class="btn">Book</a>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn">Login</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<div class="pagination">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

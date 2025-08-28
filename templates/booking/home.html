@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Travel Booking</h1>
+<p>Book flights, trains, and buses across India</p>
+
+<a href="{% url 'travel_options' %}" class="btn">Search Travel Options</a>
+
+{% if travel_options %}
+<h3>Available Options</h3>
+<div class="grid">
+    {% for option in travel_options %}
+    <div class="card">
+        <h4>{{ option.get_type_display }}</h4>
+        <p>{{ option.source }} → {{ option.destination }}</p>
+        <p>{{ option.date }} {{ option.time }}</p>
+        <p class="price">₹{{ option.price }}</p>
+        <p>{{ option.available_seats }} seats</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'book_travel' option.travel_id %}" class="btn">Book</a>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn">Login</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

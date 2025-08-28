@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>My Bookings</h1>
+
+{% if bookings %}
+<div class="grid">
+    {% for booking in bookings %}
+    <div class="card">
+        <h4>{{ booking.booking_id }}</h4>
+        <p>{{ booking.travel_option.get_type_display }}</p>
+        <p>{{ booking.travel_option.source }} → {{ booking.travel_option.destination }}</p>
+        <p>{{ booking.travel_option.date }} {{ booking.travel_option.time }}</p>
+        <p>{{ booking.number_of_seats }} seats</p>
+        <p class="price">₹{{ booking.total_price }}</p>
+        <p>{{ booking.status }}</p>
+        {% if booking.status == 'confirmed' %}
+        <a href="{% url 'cancel_booking' booking.booking_id %}" class="btn btn-cancel">Cancel</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No bookings found.</p>
+{% endif %}
+{% endblock %}

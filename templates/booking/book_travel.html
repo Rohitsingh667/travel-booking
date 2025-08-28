@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Book Travel</h1>
+
+<div class="card">
+    <h3>{{ travel_option.get_type_display }}</h3>
+    <p>{{ travel_option.source }} → {{ travel_option.destination }}</p>
+    <p>{{ travel_option.date }} {{ travel_option.time }}</p>
+    <p class="price">₹{{ travel_option.price }} per seat</p>
+    <p>{{ travel_option.available_seats }} seats available</p>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <label>Seats:</label>
+    {{ form.number_of_seats }}
+    <button type="submit" class="btn">Book</button>
+</form>
+
+<a href="{% url 'travel_options' %}">Back</a>
+{% endblock %}
